@@ -1,25 +1,26 @@
 import json
 
-with open('contacts.json', 'r') as file:
+
+with open("contacts.json", "r") as file:
     data = json.load(file)
 
 
-def save_contact():
-    with open('contacts.json', 'w') as file:
-        json.dump(data, file, indent=4)
+def SaveContact():
+    with open("contacts.json", "w") as file:
+        json.dump(data, file,indent=4)
 
 
 def AddContact():
-    name = input("What is your name? ")
-    email = input("What is your email? ")
-    phone = input("What is your phone number? ")
+    name = input("Enter your name: ")
+    email = input("Enter your email: ")
+    phone = input("Enter your phone number: ")
     skills = {}
     while True:
-        pick = input("Would you like to add a skill? (y/n) ")
+        pick = input("Do you want to add another contact? (y/n): ").lower()
         if pick == "y":
-            skill_name = input("What is your favorite skill? ")
-            skill_lvl = input("What is your favorite level? ")
-            skills[skill_name] = skill_lvl
+            Skill_name = input("Enter your Skill name: ")
+            skill_lvl = input("Enter your Skill level: ")
+            skills[Skill_name] = skill_lvl
         else:
             break
     data[name] = {
@@ -27,70 +28,111 @@ def AddContact():
         "phone": phone,
         "skills": skills
     }
-    save_contact()
-    print("Contact added successfully")
+    SaveContact()
+    print("Added successfully!")
 
 
-def show_contact():
+def showContact():
     for name in data:
-        print(f"Name: {name}")
-        print(f"Email: {data[name]['email']}")
-        print(f"phone: {data[name]['phone']}")
-        print("Skill Levels:")
+        print("_" * 30)
+        print(f"Name : {name}")
+        print(f"Email : {data[name]['email']}")
+        print(F"phone number : {data[name]['phone']}")
+        print("skills:")
         for skill in data[name]['skills']:
-            print(f"{skill}: {data[name]['skills'][skill]}")
+            print(f"- {skill}:{data[name]['skills'][skill]}")
+
+    print("_" * 30)
+
+
+def searchContact():
+    name_search = input("Enter name: ")
+    if name_search in data:
+        print("_" * 30)
+        print(f"Name : {name_search}")
+        print(f"Email : {data[name_search]['email']}")
+        print(f"Phone number : {data[name_search]['phone']}")
+        print("skills:")
+        for skill in data[name_search]['skills']:
+            print(f"- {skill}:{data[name_search]['skills'][skill]}")
 
         print("_" * 30)
 
-
-def search_contact():
-    search_name = input("Who you want to search? ")
-    if search_name in data:
-        print(f"name: {search_name}")
-        print(f"email: {data[search_name]['email']}")
-        print(f"phone: {data[search_name]['phone']}")
-        print("skills:")
-        for skill in data[search_name]['skills']:
-            print(f"{skill} : {data[search_name]['skills'][skill]}")
     else:
-        print("not found")
+        print("contact not found")
 
 
-print("_" * 30)
-
-
-def update_contact():
-    update_name = input("Who you want to update? ")
-    if update_name in data:
-        print("what do you want to update? ?")
+def UpdateContact():
+    upd = input("who do  you want to update?")
+    if upd in data:
         print("1.name")
         print("2.email")
         print("3.phone")
         print("4.skills")
-        print("_" * 30)
-        pick = input("pick one")
+        pick = input("what do you want to update?")
         if pick == "1":
-            name = input("What is your name? ")
-            info = data.pop(update_name)
-            data[name] = info
+            name_update = input("Enter your name: ")
+            info = data.pop(upd)
+            data[name_update] = info
         elif pick == "2":
-            email = input("What is your email? ")
-            data[update_name]["email"] = email
+            data[upd]["email"] = input("Enter your email: ")
         elif pick == "3":
-            phone = input("What is your phone number? ")
-            data[update_name]["phone"] = phone
-
+            data[upd]["phone"] = input("Enter your phone number: ")
         elif pick == "4":
-            skills_change = input("What is your skill? ")
-            skill_lvlchange = input("What is your level? ")
-            data[update_name]["skills"][skills_change] = skill_lvlchange
-
-
+            skill_update = input("Enter your Skill name: ")
+            skill_lvl_update = input("Enter your Skill level: ")
+            if skill_update in data[upd]["skills"]:
+                data[upd]["skills"][skill_update] = skill_lvl_update
+            else:
+                print("skill not found")
+                return
         else:
-            print("invalid")
+            print("invalid input")
             return
-        save_contact()
-        print("Updated successfully!")
     else:
-        print("not found")
-        print("_" * 30)
+        print("contact not found")
+        return
+    SaveContact()
+    print("Updated successfully!")
+
+
+def deleteContact():
+    delete_name = input("who do you want to delete?")
+    if delete_name in data:
+        data.pop(delete_name)
+        SaveContact()
+        print("Deleted successfully!")
+    else:
+     print("contact not found")
+    return
+def countContact():
+    print("total contacts :", len(data))
+def bye():
+    print("bye")
+    exit()
+option = ""
+while option != "7":
+    print("1. Add contact")
+    print("2.show contact")
+    print("3. Search contact")
+    print("4. Update contact")
+    print("5. Delete contact")
+    print("6.count contact")
+    print("7. Exit")
+    option = input("Enter your choice: ")
+    if option == "1":
+        AddContact()
+    elif option == "2":
+        showContact()
+    elif option == "3":
+        searchContact()
+    elif option == "4":
+        UpdateContact()
+    elif option == "5":
+        deleteContact()
+    elif option == "6":
+        countContact()
+    elif option == "7":
+        bye()
+    else:
+     print("invalid input")
