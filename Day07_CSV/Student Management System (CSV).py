@@ -69,3 +69,23 @@ def updateStudent():
      print("Student Updated Successfully")
     else:
         print("Student not Found")
+def deleteStudent():
+    with open ("students.csv","r",newline="") as file:
+        data = csv.reader(file)
+        delete = input("Enter Student Name :")
+        Rows = []
+        found = False
+        for row in data:
+            Rows.append(row)
+        for row in Rows:
+            if row[0] == delete:
+                found = True
+                Rows.remove(row)
+                break
+    if found:
+        with open("students.csv","w", newline="") as file:
+            writer = csv.writer(file)
+            writer.writerows(Rows)
+            print("Student Deleted Successfully")
+    else:
+        print("Student not Found")
