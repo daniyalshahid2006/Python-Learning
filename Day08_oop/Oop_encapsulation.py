@@ -126,5 +126,5 @@
 # character1.cast_spell(spell1)
 # print(character1.get_mana())
 #
-
-
+#
+#
