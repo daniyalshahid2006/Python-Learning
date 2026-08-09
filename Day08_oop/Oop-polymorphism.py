@@ -192,15 +192,16 @@
 
 
 
-
 class Character:
     def __init__(self, name,health,**kwargs):
         self.name = name
         self.__health = health
         self.info = kwargs
+
     def display(self):
         print(self.name)
         print(self.__health)
+        print(self.info)
     def get_health(self):
         return self.__health
     def set_health(self,new_health):
@@ -211,27 +212,112 @@ class Character:
         else:
             self.__health = new_health
     def damage(self,amount):
-        print(f"goblin take{amount} of damage ")
-    def attack(self,attacks):
-        print(f"{self.name} attacks {attacks} goblin ")
-        attacks.damage(10)
-    def goblin_health(self,health):
-        
+        new_health = self.__health - amount
+        self.set_health(new_health)
+        print(f"{self.name} take {amount} of damage  ")
 
+    def attack(self,attacks):
+        print(f"{self.name} attacks  goblin ")
+        attacks.damage(10)
 class Warrior(Character):
+    def __init__(self,name,health,stamina,**kwargs):
+        super().__init__(name,health,**kwargs)
+        self.stamina = stamina
+    def display(self):
+        print(self.name)
+        print(self.get_health())
+        print(self.stamina)
+        print(self.info)
+    def attack(self,attacks,*bleeding):
+      if self.stamina > 5:
+         print(f"{self.name} attacks goblin ")
+         damage = 20
+         if bleeding:
+             damage = damage + sum(bleeding)
+             print(f"{self.name} caused bleeding on goblin ")
+         attacks.damage(damage)
+         self.stamina = self.stamina - 5
+      else:
+          print("Not enough stamina")
+
+class Mage(Character):
     def __init__(self,name,health,mana,**kwargs):
         super().__init__(name,health,**kwargs)
         self.mana = mana
     def display(self):
         print(self.name)
-        print(self.get_health())
         print(self.mana)
-    def attack(self,attacks,*bleeding):
-        print(f"{self.name} attacks {attacks} goblin ")
-        attacks.damage(20)
+        print(self.get_health())
+        print(self.info)
+    def attack(self,attacks,*burn):
+        if self.mana > 10:
+            print(f"{self.name} cast a fireball at goblin ")
+            damage = 25
+            if burn:
+                damage = damage + sum(burn)
+                print(f"{self.name} caused burning on goblin ")
+            attacks.damage(damage)
+            self.mana = self.mana - 10
+        else:
+            print("Not enough mana")
 
+class Archer(Character):
+    def __init__(self,name,health,arrows,**kwargs):
+        super().__init__(name,health,**kwargs)
+        self.arrows = arrows
+    def display(self):
+        print(self.name)
+        print(self.arrows)
+        print(self.get_health())
+        print(self.info)
 
-
+    def attack(self, attacks, *critical):
+        if self.arrows > 0:
+            print(f"{self.name} shoots an arrow at goblin ")
+            damage = 5
+            if critical:
+                damage = damage + sum(critical)
+                print(f"{self.name} caused critical damage on goblin ")
+            attacks.damage(damage)
+            self.arrows = self.arrows - 1
+        else:
+            print("Not enough arrows")
+name1 = input("Enter your name: ")
+health1 = int(input("Enter your health: "))
+stamina1 = int(input("Enter your stamina: "))
+warrior1 = Warrior(name1,health1,stamina1,muscle = 80,lift = 20)
+warrior1.display()
+print(warrior1.get_health())
+goblin = Character("goblin",100,poison = 20)
+goblin.display()
+print(goblin.get_health())
+warrior1.attack(goblin,2,3,6)
+print(goblin.get_health())
+warrior1.display()
+name2 = input("Enter your name: ")
+health2 = int(input("Enter your health: "))
+mana1 = int(input("Enter your stamina: "))
+Mage1 = Mage(name2,health2,mana1,poison = 20,wisdom = 80)
+Mage1.display()
+print(Mage1.get_health())
+goblin2 = Character("goblin",100,poison = 20)
+goblin2.display()
+print(goblin2.get_health())
+Mage1.attack(goblin2,3,3,3)
+print(goblin2.get_health())
+Mage1.display()
+name3 = input("Enter your name: ")
+health3 = int(input("Enter your health: "))
+arrows1 = int(input("Enter your stamina: "))
+Archer1 = Archer(name3,health3,arrows1,eyesight = 80,hearing = 20)
+Archer1.display()
+print(Archer1.get_health())
+goblin3 = Character("goblin",100,poison = 20)
+goblin3.display()
+print(goblin3.get_health())
+Archer1.attack(goblin3,2,2,2,2)
+print(goblin3.get_health())
+Archer1.display()
 
 
 
