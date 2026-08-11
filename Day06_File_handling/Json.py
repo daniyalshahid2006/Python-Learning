@@ -12,6 +12,7 @@ student = {
         }
 }
 
+
 with open("student.json","w") as file:
     json.dump(student,file,indent=4)
 with open("student.json","r") as file:

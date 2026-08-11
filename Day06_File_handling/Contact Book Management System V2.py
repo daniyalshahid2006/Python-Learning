@@ -10,6 +10,7 @@ def SaveContact():
         json.dump(data, file,indent=4)
 
 
+
 def AddContact():
     name = input("Enter your name: ")
     email = input("Enter your email: ")
@@ -30,7 +31,6 @@ def AddContact():
     }
     SaveContact()
     print("Added successfully!")
-
 
 def showContact():
     for name in data:

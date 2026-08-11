@@ -33,11 +33,7 @@ def searchStudent():
                 print("Age :", row[1])
                 print("Gmail :", row[2])
                 return
-
-
     print("Student not Found")
-
-
 def updateStudent():
     with open("students.csv", "r", newline="") as file:
         data = csv.reader(file)
