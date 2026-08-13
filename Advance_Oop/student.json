@@ -1,0 +1,9 @@
+{
+    "name": "daniyal",
+    "age": 25,
+    "skills": {
+        "python": "basic",
+        "web development": "basic",
+        "gaming": "master"
+    }
+}
