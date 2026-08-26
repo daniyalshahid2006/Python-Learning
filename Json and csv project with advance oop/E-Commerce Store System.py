@@ -1,3 +1,6 @@
+from itertools import product
+
+
 class Product:
     def __init__(self, name, product_id, price, quantity):
         self.name = name
@@ -14,10 +17,37 @@ class Customer:
         self.last_name = last_name
         self.gmail = email
         self.address = address
+        self.orders = {}
+        self.next_order_id = 1
+
+    def checkout(self):
+        # orders = len(self.orders) +1
+        #
+        # order = Order(orders,self)
+        # self.orders[orders] = order
+        for key, values in self.cart.products.items():
+            if values[1] > values[0].quantity:
+                print(f"sorry for some reason our product reduce to{values[0].quantity}please reduce {values[1]-values[0].quantity} amount of products")
+                return
+
+        order_id = self.next_order_id
+        order = Order(order_id, self)
+        self.orders[order_id] = order
+        self.next_order_id += 1
+        for key, values in self.cart.products.items():
+                 values[0].quantity -= values[1]
+        self.cart.products ={}
+
+    def show_orders(self):
+        for key,values in self.orders.items():
+            values.display_order()
+
+
+
 
 
 class Cart:
-    def __init__(self, cart_id):
+    def __init__(self, cart_id,):
         self.cart_id = cart_id
         self.products = {}
 
@@ -46,8 +76,10 @@ class Cart:
      for keys, value in self.products.items():
          total += value[0].price * value[1]
      print("your total is", total)
+# class CheckOut(Cart):
+
 class Order:
-    def __init__(self,order_id,h):
+    def __init__(self,order_id,customer):
         self.order_id = order_id
         self.customer = customer
         self.order_products = {}
@@ -68,14 +100,26 @@ class Order:
 
 
 
-product1 = Product("mouse", 1, 100, 1)
-product2 = Product("keyboard", 2, 300, 1)
-customer1 = Customer(1, "dani", "pani", "@h", "lahore")
-customer1.cart.add_product(product1, 1)
 
-customer2 = Customer(2, "pani","dani00","@k", "karachi")
-customer2.cart.add_product(product2, 1)
-
-order1 = Order(1, customer1)
-
-order1.display_order()
+# product1 = Product("mouse", 1, 100, 5)
+# product2 = Product("keyboard", 2, 300, 5)
+# customer1 = Customer(1, "dani", "pani", "@h", "lahore")
+# customer1.cart.add_product(product1, 1)
+#
+# customer2 = Customer(2, "pani","dani00","@k", "karachi")
+# customer2.cart.add_product(product2, 1)
+#
+# order1 = Order(1, customer1)
+#
+# order1.display_order()
+product1 = Product("mouse",1,100,10)
+product2 = Product("keyboard",2,300,5)
+customer1 = Customer(1,"dani","lani","@","lahore")
+customer1.cart.add_product(product1,1)
+customer1.cart.add_product(product2,1)
+print(product1.quantity)
+customer1.cart.show_products()
+customer1.checkout()
+print(product1.quantity)
+customer1.cart.show_products()
+customer1.show_orders()
