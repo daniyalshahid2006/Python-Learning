@@ -1,12 +1,23 @@
-from itertools import product
-
-
 class Product:
     def __init__(self, name, product_id, price, quantity):
         self.name = name
         self.product_id = product_id
         self.price = price
         self.quantity = quantity
+    def increase_stock(self,new_quantity):
+        if new_quantity <= 0:
+            print("product cant be negative or zero here")
+        else:
+            self.quantity += new_quantity
+    def decrease_stock(self,new_quantity):
+        if new_quantity > self.quantity:
+            print("not enough stock")
+        elif new_quantity <= 0:
+            print("product cant be negative or zero here")
+        else:
+            self.quantity -= new_quantity
+
+
 
 
 class Customer:
@@ -35,7 +46,7 @@ class Customer:
         self.orders[order_id] = order
         self.next_order_id += 1
         for key, values in self.cart.products.items():
-                 values[0].quantity -= values[1]
+                 values[0].decrease_stock(values[1])
         self.cart.products ={}
 
     def show_orders(self):
@@ -76,6 +87,25 @@ class Cart:
      for keys, value in self.products.items():
          total += value[0].price * value[1]
      print("your total is", total)
+    def remove_product(self,product_id):
+        if product_id in self.products:
+            del self.products[product_id]
+            print("removed product successfully")
+        else:
+            print("product not exist")
+    def update_product(self,product_id,new_quantity):
+        if product_id in self.products:
+            if new_quantity > self.products[product_id][0].quantity:
+                print("sorry not enough items")
+            elif new_quantity == 0:
+                self.remove_product(product_id)
+            elif new_quantity <0:
+                print("no negative quantity")
+            else:
+                self.products[product_id][1] = new_quantity
+        else:
+            print("product not exist")
+
 # class CheckOut(Cart):
 
 class Order:
@@ -83,6 +113,7 @@ class Order:
         self.order_id = order_id
         self.customer = customer
         self.order_products = {}
+        self.status = "pending"
         for key, values in self.customer.cart.products.items():
             self.order_products.update({key:values})
         self.total = 0
@@ -97,6 +128,56 @@ class Order:
         for key, values in self.order_products.items():
             print(f"product id is {key} \nproduct name is {values[0].name} \nproduct price is { values[0].price} \nquantity is { values[1]}")
         print("total is", self.total)
+    def change_status(self,new_status):
+        if self.status == "pending":
+            if new_status == "packing":
+                self.status = new_status
+            else:
+                print("invalid status")
+        elif self.status == "packing":
+            if new_status == "shipped":
+                self.status = new_status
+            else:
+                print("invalid status")
+        elif self.status == "shipped":
+            if new_status == "delivered":
+                self.status = new_status
+            else:
+                print("invalid status")
+        elif self.status == "delivered":
+            print("invalid attempt")
+    def cancel_order(self):
+        if self.status == "pending":
+            pick = input("are you sure you want to cancel this order?(y/n)").lower()
+            if pick == "y":
+                self.status = "canceled"
+                for key, values in self.order_products.items():
+                    values[0].increase_stock(values[1])
+                print("you order has been canceled")
+            elif pick == "n":
+                return
+            else:
+                print("invalid input")
+        elif self.status == "packing":
+            pick = input("are you sure you want to cancel this order?(y/n)").lower()
+            if pick == "y":
+                self.status = "canceled"
+                for key, values in self.order_products.items():
+                    values[0].increase_stock(values[1])
+                print("you order has been canceled")
+                print("you have a fine of 1 billion dollars")
+            elif pick == "n":
+                return
+            else:
+                print("invalid input")
+        elif self.status == "shipped":
+            print("you cant cancel this order")
+        elif self.status == "delivered":
+            print("seriously bruh")
+
+
+
+
 
 
 
@@ -115,11 +196,18 @@ class Order:
 product1 = Product("mouse",1,100,10)
 product2 = Product("keyboard",2,300,5)
 customer1 = Customer(1,"dani","lani","@","lahore")
+# customer1.cart.add_product(product1,1)
+# customer1.cart.add_product(product2,1)
+# print(product1.quantity)
+# customer1.cart.show_products()
+# customer1.checkout()
+# print(product1.quantity)
+# customer1.cart.show_products()
+# customer1.show_orders()
 customer1.cart.add_product(product1,1)
-customer1.cart.add_product(product2,1)
-print(product1.quantity)
+customer1.cart.update_product(1,2)
 customer1.cart.show_products()
-customer1.checkout()
-print(product1.quantity)
+customer1.cart.update_product(1,5)
+customer1.cart.update_product(1,0)
 customer1.cart.show_products()
 customer1.show_orders()
