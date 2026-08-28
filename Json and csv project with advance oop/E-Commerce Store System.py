@@ -1,3 +1,4 @@
+
 class Product:
     def __init__(self, name, product_id, price, quantity):
         self.name = name
@@ -52,7 +53,11 @@ class Customer:
     def show_orders(self):
         for key,values in self.orders.items():
             values.display_order()
-
+    def show_specific_order(self,check_id):
+        if check_id in self.orders:
+            self.orders[check_id].display_order()
+        else:
+            print("order not found")
 
 
 
@@ -112,13 +117,16 @@ class Order:
     def __init__(self,order_id,customer):
         self.order_id = order_id
         self.customer = customer
-        self.order_products = {}
         self.status = "pending"
+        self.order_products = {}
+        self.order_stock_products = {}
         for key, values in self.customer.cart.products.items():
-            self.order_products.update({key:values})
+            self.order_stock_products.update({key:[values[0],values[1]]})
+        for key, values in self.customer.cart.products.items():
+            self.order_products.update({key:[values[0].name,values[0].price,values[1]]})
         self.total = 0
         for key, values in self.order_products.items():
-            self.total += values[0].price * values[1]
+            self.total += values[1] * values[2]
     def display_order(self):
         print(self.customer.customer_id)
         print(self.customer.first_name)
@@ -126,32 +134,41 @@ class Order:
         print(self.customer.gmail)
         print(self.customer.address)
         for key, values in self.order_products.items():
-            print(f"product id is {key} \nproduct name is {values[0].name} \nproduct price is { values[0].price} \nquantity is { values[1]}")
+            print(f"product id is {key} \nproduct name is {values[0]} \nproduct price is { values[1]} \nquantity is { values[2]}")
         print("total is", self.total)
     def change_status(self,new_status):
         if self.status == "pending":
             if new_status == "packing":
                 self.status = new_status
+                return True
             else:
                 print("invalid status")
+                return False
         elif self.status == "packing":
             if new_status == "shipped":
                 self.status = new_status
+                return True
             else:
+
                 print("invalid status")
+                return False
         elif self.status == "shipped":
             if new_status == "delivered":
                 self.status = new_status
+                return True
             else:
                 print("invalid status")
+                return False
         elif self.status == "delivered":
             print("invalid attempt")
+            return False
+        return False
     def cancel_order(self):
         if self.status == "pending":
             pick = input("are you sure you want to cancel this order?(y/n)").lower()
             if pick == "y":
                 self.status = "canceled"
-                for key, values in self.order_products.items():
+                for key, values in self.order_stock_products.items():
                     values[0].increase_stock(values[1])
                 print("you order has been canceled")
             elif pick == "n":
@@ -162,7 +179,7 @@ class Order:
             pick = input("are you sure you want to cancel this order?(y/n)").lower()
             if pick == "y":
                 self.status = "canceled"
-                for key, values in self.order_products.items():
+                for key, values in self.order_stock_products.items():
                     values[0].increase_stock(values[1])
                 print("you order has been canceled")
                 print("you have a fine of 1 billion dollars")
@@ -174,6 +191,25 @@ class Order:
             print("you cant cancel this order")
         elif self.status == "delivered":
             print("seriously bruh")
+class OrderManager:
+    def __init__(self,):
+        self.orders = {}
+    def add_order(self,order):
+        self.orders[order.order_id] = order
+    def change_status(self, order_id,new_status):
+        if order_id in self.orders:
+            result =self.orders[order_id].change_status(new_status)
+            if result:
+             print("order status changed")
+            else:
+                print("order status not changed")
+        else:
+            print("order id not exist")
+
+
+
+
+
 
 
 
