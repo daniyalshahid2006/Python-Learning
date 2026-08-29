@@ -1,3 +1,7 @@
+import json
+data = {}
+with open("data.json","w") as file:
+ json.dump(data,file)
 
 class Product:
     def __init__(self, name, product_id, price, quantity):
@@ -17,6 +21,14 @@ class Product:
             print("product cant be negative or zero here")
         else:
             self.quantity -= new_quantity
+    def to_dict(self):
+        row = {}
+        row["product_id"] = self.product_id
+        row["name"] = self.name
+        row["price"] = self.price
+        row["quantity"] = self.quantity
+        return row
+
 
 
 
@@ -32,7 +44,7 @@ class Customer:
         self.orders = {}
         self.next_order_id = 1
 
-    def checkout(self):
+    def checkout(self,order_manager):
         # orders = len(self.orders) +1
         #
         # order = Order(orders,self)
@@ -42,10 +54,10 @@ class Customer:
                 print(f"sorry for some reason our product reduce to{values[0].quantity}please reduce {values[1]-values[0].quantity} amount of products")
                 return
 
-        order_id = self.next_order_id
+        order_id = order_manager.id_giver()
         order = Order(order_id, self)
         self.orders[order_id] = order
-        self.next_order_id += 1
+        order_manager.add_order(order)
         for key, values in self.cart.products.items():
                  values[0].decrease_stock(values[1])
         self.cart.products ={}
@@ -194,6 +206,7 @@ class Order:
 class OrderManager:
     def __init__(self,):
         self.orders = {}
+        self.count = 1
     def add_order(self,order):
         self.orders[order.order_id] = order
     def change_status(self, order_id,new_status):
@@ -205,6 +218,10 @@ class OrderManager:
                 print("order status not changed")
         else:
             print("order id not exist")
+    def id_giver(self):
+        order_id = self.count
+        self.count += 1
+        return order_id
 
 
 
@@ -218,32 +235,65 @@ class OrderManager:
 
 
 
-# product1 = Product("mouse", 1, 100, 5)
-# product2 = Product("keyboard", 2, 300, 5)
-# customer1 = Customer(1, "dani", "pani", "@h", "lahore")
-# customer1.cart.add_product(product1, 1)
-#
-# customer2 = Customer(2, "pani","dani00","@k", "karachi")
-# customer2.cart.add_product(product2, 1)
-#
-# order1 = Order(1, customer1)
-#
-# order1.display_order()
-product1 = Product("mouse",1,100,10)
-product2 = Product("keyboard",2,300,5)
-customer1 = Customer(1,"dani","lani","@","lahore")
+
+
+
+# # product1 = Product("mouse", 1, 100, 5)
+# # product2 = Product("keyboard", 2, 300, 5)
+# # customer1 = Customer(1, "dani", "pani", "@h", "lahore")
+# # customer1.cart.add_product(product1, 1)
+# #
+# # customer2 = Customer(2, "pani","dani00","@k", "karachi")
+# # customer2.cart.add_product(product2, 1)
+# #
+# # order1 = Order(1, customer1)
+# #
+# # order1.display_order()
+# product1 = Product("mouse",1,100,10)
+# product2 = Product("keyboard",2,300,5)
+# customer1 = Customer(1,"dani","lani","@","lahore")
+# # customer1.cart.add_product(product1,1)
+# # customer1.cart.add_product(product2,1)
+# # print(product1.quantity)
+# # customer1.cart.show_products()
+# # customer1.checkout()
+# # print(product1.quantity)
+# # customer1.cart.show_products()
+# # customer1.show_orders()
 # customer1.cart.add_product(product1,1)
-# customer1.cart.add_product(product2,1)
-# print(product1.quantity)
+# customer1.cart.update_product(1,2)
 # customer1.cart.show_products()
-# customer1.checkout()
-# print(product1.quantity)
+# customer1.cart.update_product(1,5)
+# customer1.cart.update_product(1,0)
 # customer1.cart.show_products()
 # customer1.show_orders()
-customer1.cart.add_product(product1,1)
-customer1.cart.update_product(1,2)
-customer1.cart.show_products()
-customer1.cart.update_product(1,5)
-customer1.cart.update_product(1,0)
-customer1.cart.show_products()
+
+
+order_manager = OrderManager()
+
+product1 = Product("Mouse", 1, 100, 10)
+product2 = Product("Keyboard", 2, 300, 5)
+
+customer1 = Customer(1, "Dani", "Lani", "@", "Lahore")
+customer2 = Customer(2, "Ali", "Khan", "@", "Karachi")
+
+customer1.cart.add_product(product1, 2)
+customer2.cart.add_product(product2, 3)
+
+customer1.checkout(order_manager)
+customer2.checkout(order_manager)
+
+print("\n--- CUSTOMER 1 ORDERS ---")
 customer1.show_orders()
+
+print("\n--- CUSTOMER 2 ORDERS ---")
+customer2.show_orders()
+
+print("\n--- ALL MANAGER ORDERS ---")
+for order_id, order in order_manager.orders.items():
+    print("Order ID:", order_id)
+    order.display_order()
+
+print("\n--- REMAINING STOCK ---")
+print("Mouse:", product1.quantity)
+print("Keyboard:", product2.quantity)
