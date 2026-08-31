@@ -31,8 +31,6 @@ class Product:
 
 
 
-
-
 class Customer:
     def __init__(self, customer_id, first_name, last_name, email, address):
         self.cart = Cart(customer_id)
@@ -223,10 +221,11 @@ class OrderManager:
         self.count += 1
         return order_id
 
-
-
-
-
+class ProductManager:
+    def __init__(self,):
+        self.products = {}
+    def add_product(self,product):
+        self.products[product.product_id] = product
 
 
 
@@ -268,11 +267,19 @@ class OrderManager:
 # customer1.cart.show_products()
 # customer1.show_orders()
 
+product_manager = ProductManager()
+
 
 order_manager = OrderManager()
 
 product1 = Product("Mouse", 1, 100, 10)
 product2 = Product("Keyboard", 2, 300, 5)
+product_manager.add_product(product1)
+product_manager.add_product(product2)
+Products = []
+for key ,values in product_manager.products.items():
+    Products.append(values.to_dict())
+
 
 customer1 = Customer(1, "Dani", "Lani", "@", "Lahore")
 customer2 = Customer(2, "Ali", "Khan", "@", "Karachi")
