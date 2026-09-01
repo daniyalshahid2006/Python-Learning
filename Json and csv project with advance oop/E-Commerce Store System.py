@@ -1,3 +1,4 @@
+import csv
 import json
 data = {}
 with open("data.json","w") as file:
@@ -68,6 +69,15 @@ class Customer:
             self.orders[check_id].display_order()
         else:
             print("order not found")
+    def to_dict(self):
+        row = {}
+        row["customer_id"] = self.customer_id
+        row["first_name"] = self.first_name
+        row["last_name"] = self.last_name
+        row["gmail"] = self.gmail
+        row["address"] = self.address
+        return row
+
 
 
 
@@ -201,6 +211,14 @@ class Order:
             print("you cant cancel this order")
         elif self.status == "delivered":
             print("seriously bruh")
+    def to_dict(self):
+        row = {}
+        row["order_id"] = self.order_id
+        row["customer_id"] = self.customer.customer_id
+        row["status"] = self.status
+        row["order_products"] = self.order_products
+        row["total"] = self.total
+        return row
 class OrderManager:
     def __init__(self,):
         self.orders = {}
@@ -228,7 +246,11 @@ class ProductManager:
         self.products[product.product_id] = product
 
 
-
+class CustomerManager:
+    def __init__(self):
+        self.customers = {}
+    def add_customer(self,customer):
+        self.customers[customer.customer_id] = customer
 
 
 
@@ -268,10 +290,8 @@ class ProductManager:
 # customer1.show_orders()
 
 product_manager = ProductManager()
-
-
 order_manager = OrderManager()
-
+customer_manager = CustomerManager()
 product1 = Product("Mouse", 1, 100, 10)
 product2 = Product("Keyboard", 2, 300, 5)
 product_manager.add_product(product1)
@@ -279,28 +299,95 @@ product_manager.add_product(product2)
 Products = []
 for key ,values in product_manager.products.items():
     Products.append(values.to_dict())
+data["products"] = Products
+with open('data.json','w') as file:
+    json.dump(data, file)
+with open('data.json','r') as file:
+    data = json.load(file)
+for row in data['products']:
+    product = Product(
+        row["name"],
+        row["product_id"],
+        row["price"],
+        row["quantity"])
+    product_manager.add_product(product)
+product1 = product_manager.products[1]
+product2 = product_manager.products[2]
 
 
 customer1 = Customer(1, "Dani", "Lani", "@", "Lahore")
 customer2 = Customer(2, "Ali", "Khan", "@", "Karachi")
+customer_manager.add_customer(customer1)
+customer_manager.add_customer(customer2)
+Customers = []
+for keys,values in customer_manager.customers.items():
+    Customers.append(values.to_dict())
+data["customers"] = Customers
+with open('data.json','w') as file:
+    json.dump(data, file)
+with open('data.json','r') as file:
+    data = json.load(file)
+for row in data['customers']:
+    customer = Customer(
+        row["customer_id"],
+        row["first_name"],
+        row["last_name"],
+        row["gmail"],
+        row["address"]
+    )
+    customer_manager.add_customer(customer)
+customer1 = customer_manager.customers[1]
+customer2 = customer_manager.customers[2]
+
+
 
 customer1.cart.add_product(product1, 2)
 customer2.cart.add_product(product2, 3)
 
 customer1.checkout(order_manager)
 customer2.checkout(order_manager)
+order = []
+for key,values in order_manager.orders.items():
+    order.append(values.to_dict())
+data["orders"] = order
+with open('data.json','w') as file:
+    json.dump(data, file)
+with open('data.json','r') as file:
+    data = json.load(file)
+    for row in data['orders']:
+        order = Order(
+            row["order_id"],
+            customer = customer_manager.customers[row["customer_id"]],
+        )
+        order.status = row["status"]
+        for key, value in row["order_products"].items():
+            product_id = int(key)
+            product_obj = product_manager.products[product_id]
+            order.order_stock_products[product_id] = [product_obj,value[2]]
+        order.total = row["total"]
+        order_manager.add_order(order)
+for key,values in order_manager.orders.items():
+    values.display_order()
+order1 = order_manager.orders[1]
+order1.cancel_order()
+print(product_manager.products[1].quantity)
+print(product1.quantity)
 
-print("\n--- CUSTOMER 1 ORDERS ---")
-customer1.show_orders()
 
-print("\n--- CUSTOMER 2 ORDERS ---")
-customer2.show_orders()
 
-print("\n--- ALL MANAGER ORDERS ---")
-for order_id, order in order_manager.orders.items():
-    print("Order ID:", order_id)
-    order.display_order()
+# print("\n--- CUSTOMER 1 ORDERS ---")
+# customer1.show_orders()
+#
+# print("\n--- CUSTOMER 2 ORDERS ---")
+# customer2.show_orders()
+#
+# print("\n--- ALL MANAGER ORDERS ---")
+# for order_id, order in order_manager.orders.items():
+#     print("Order ID:", order_id)
+#     order.display_order()
+#
+# print("\n--- REMAINING STOCK ---")
+# print("Mouse:", product1.quantity)
+# print("Keyboard:", product2.quantity)
 
-print("\n--- REMAINING STOCK ---")
-print("Mouse:", product1.quantity)
-print("Keyboard:", product2.quantity)
+
