@@ -1,8 +1,7 @@
 import csv
 
+
 headers = ["employee_id", "employee_name", "gmail", "department", "position", "salary"]
-
-
 class Employee:
     def __init__(self, employee_id, employee_name, gmail, department, position, salary):
         self.employee_id = employee_id
@@ -19,315 +18,162 @@ class EmployeeManager:
 
     def add_existing_employee(self, employee_id, employee_name, gmail, department, position, salary):
         if employee_id in self.employees:
-            print("Employee already exists.")
+            print("Employee already exists chnage id")
         else:
-            employee = Employee(
-                employee_id,
-                employee_name,
-                gmail,
-                department,
-                position,
-                salary
-            )
+            employee = Employee(employee_id, employee_name, gmail, department, position, salary)
             self.employees[employee_id] = employee
 
     def add_emp(self, employee_name, gmail, department, position, salary):
         candidate = 1
-
         while candidate in self.employees:
-            candidate += 1
-
-        employee = Employee(
-            candidate,
-            employee_name,
-            gmail,
-            department,
-            position,
-            salary
-        )
-
+            candidate = candidate + 1
+        employee = Employee(candidate, employee_name, gmail, department, position, salary)
         self.employees[candidate] = employee
-        print(f"Employee added with ID {candidate}")
 
     def show_employees(self):
-        if not self.employees:
-            print("No employees found.")
-            return
-
         for employee in self.employees.values():
-            print("--------------------")
-            print("ID:", employee.employee_id)
-            print("Name:", employee.employee_name)
-            print("Gmail:", employee.gmail)
-            print("Department:", employee.department)
-            print("Position:", employee.position)
-            print("Salary:", employee.salary)
+            print(employee.employee_id)
+            print(employee.employee_name)
+            print(employee.gmail)
+            print(employee.department)
+            print(employee.position)
+            print(employee.salary)
 
-    def search_employee(self):
-        try:
-            search_id = int(input("Enter employee ID: "))
-        except ValueError:
-            print("Employee ID must be a number.")
-            return
-
+    def search_employee(self,search_id):
         if search_id in self.employees:
-            employee = self.employees[search_id]
-
-            print("--------------------")
-            print("ID:", employee.employee_id)
-            print("Name:", employee.employee_name)
-            print("Gmail:", employee.gmail)
-            print("Department:", employee.department)
-            print("Position:", employee.position)
-            print("Salary:", employee.salary)
+            print(self.employees[search_id].employee_name)
+            print(self.employees[search_id].gmail)
+            print(self.employees[search_id].department)
+            print(self.employees[search_id].position)
+            print(self.employees[search_id].salary)
         else:
-            print("Employee not found.")
+            print("Employee not found")
 
     def remove_employee(self):
-        try:
-            search_id = int(input("Enter employee ID you want to remove: "))
-        except ValueError:
-            print("Employee ID must be a number.")
-            return
-
+        search_id = int(input("Enter employee id you want to remove: "))
         if search_id in self.employees:
             del self.employees[search_id]
-            print("Employee removed.")
+            print("Employee removed")
         else:
-            print("Employee not found.")
-
-    def update_employee(self):
-        try:
-            employee_id = int(input("Enter employee ID: "))
-        except ValueError:
-            print("Employee ID must be a number.")
-            return
-
-        if employee_id not in self.employees:
-            print("Employee not found.")
-            return
-
-        while True:
-            print("\nWhat do you want to update?")
-            print("1. Name")
-            print("2. Email")
-            print("3. Department")
-            print("4. Position")
-            print("5. Salary")
-            print("6. Exit")
-
-            try:
-                pick = int(input("Enter your choice: "))
-            except ValueError:
-                print("Please enter a number from 1 to 6.")
-                continue
-
-            if pick == 1:
-                new_name = input("Enter new employee name: ")
-                self.employees[employee_id].employee_name = new_name
-
-            elif pick == 2:
-                new_email = input("Enter new employee email: ")
-                self.employees[employee_id].gmail = new_email
-
-            elif pick == 3:
-                new_department = input("Enter new employee department: ")
-                self.employees[employee_id].department = new_department
-
-            elif pick == 4:
-                new_position = input("Enter new employee position: ")
-                self.employees[employee_id].position = new_position
-
-            elif pick == 5:
-                try:
-                    new_salary = float(input("Enter new employee salary: "))
-                    self.employees[employee_id].salary = new_salary
-                except ValueError:
-                    print("Salary must be a number.")
-
-            elif pick == 6:
-                print("Exit.")
-                break
-
-            else:
-                print("Invalid choice.")
-
+            print("Employee not found")
     def save_employee(self):
-        with open("employees.csv", "w", newline="") as file:
+        with open('employees.csv', "w", newline="") as file:
             writer = csv.writer(file)
-
             writer.writerow(headers)
-
             for employee in self.employees.values():
-                writer.writerow([
-                    employee.employee_id,
-                    employee.employee_name,
-                    employee.gmail,
-                    employee.department,
-                    employee.position,
-                    employee.salary
-                ])
-
-        print("Employees saved to CSV.")
-
-
+                writer.writerow([employee.employee_id, employee.employee_name, employee.gmail,employee.department, employee.position, employee.salary])
+    def update_employee(self):
+        id = int(input("Enter employee id: "))
+        if id not in self.employees:
+            print("Employee not found")
+        else:
+            pick = 0
+            while pick != 6:
+                print("what you want to update?")
+                print("1.name")
+                print("2.email")
+                print("3.department")
+                print("4.position")
+                print("5.salary")
+                print("6.exit")
+                pick = int(input("Enter your choice: "))
+                if pick == 1:
+                    new_name = input("Enter new employee name: ")
+                    self.employees[id].employee_name = new_name
+                elif pick == 2:
+                    new_email = input("Enter new employee email: ")
+                    self.employees[id].gmail = new_email
+                elif pick == 3:
+                    new_department = input("Enter new employee department: ")
+                    self.employees[id].department= new_department
+                elif pick == 4:
+                    new_position = input("Enter new employee position: ")
+                    self.employees[id].position = new_position
+                elif pick == 5:
+                    new_salary = int(input("Enter new employee salary: "))
+                    self.employees[id].salary = new_salary
+                elif pick == 6:
+                    print("exit")
 class Payroll:
-    def calculate_monthly_salary(self, employee):
-        return float(employee.salary)
-
-    def calculate_yearly_salary(self, employee):
-        return float(employee.salary) * 12
-
-
-class PayrollManager:
-    def __init__(self, employee_manager):
-        self.employee_manager = employee_manager
-        self.payroll = Payroll()
-
-    def show_salary(self):
-        try:
-            employee_id = int(input("Enter employee ID: "))
-        except ValueError:
-            print("Employee ID must be a number.")
-            return
-
-        if employee_id not in self.employee_manager.employees:
-            print("Employee not found.")
-            return
-
-        employee = self.employee_manager.employees[employee_id]
-
-        monthly = self.payroll.calculate_monthly_salary(employee)
-        yearly = self.payroll.calculate_yearly_salary(employee)
-
-        print("--------------------")
-        print("Employee:", employee.employee_name)
-        print("Monthly salary:", monthly)
-        print("Yearly salary:", yearly)
-
-    def show_department_payroll(self):
+    def cal_salary(self):
+        id = int(input("Enter employee id: "))
+        if id in employee_manager.employees:
+            months = int(input("Enter number of months: "))
+            salary = employee_manager.employees[id].salary*months
+            print(f"your salary of {months} months is {salary}")
+    def ap_cal_salary(self):
         department = input("Enter department: ")
-
         total = 0
         found = False
-
-        for employee in self.employee_manager.employees.values():
-            if employee.department.lower() == department.lower():
-                total += float(employee.salary)
+        for employee in employee_manager.employees.values():
+            if employee.department == department:
+                total += employee.salary
                 found = True
-
         if found:
-            print("Department:", department)
-            print("Total monthly payroll:", total)
-            print("Total yearly payroll:", total * 12)
+         print(f"{department} department salary is {total}")
         else:
-            print("No employees found in this department.")
+            print(f"department doesn't exist")
 
 
 employee_manager = EmployeeManager()
-
-try:
-    with open("employees.csv", "r", newline="") as file:
-        reader = csv.reader(file)
-
-        next(reader, None)
-
-        for row in reader:
-            if len(row) != 6:
-                print("Skipped invalid CSV row.")
-                continue
-
-            try:
-                employee_id = int(row[0])
-                employee_name = row[1]
-                gmail = row[2]
-                department = row[3]
-                position = row[4]
-                salary = float(row[5])
-
-                employee_manager.add_existing_employee(
-                    employee_id,
-                    employee_name,
-                    gmail,
-                    department,
-                    position,
-                    salary
-                )
-
-            except ValueError:
-                print("Skipped invalid employee data.")
-
-except FileNotFoundError:
-    print("employees.csv not found. Starting with an empty employee manager.")
+payroll = Payroll()
 
 
-payroll_manager = PayrollManager(employee_manager)
 
+with open('employees.csv', "r") as file:
+    reader = csv.reader(file)
+    next(reader)
 
-while True:
-    print("\n==============================")
-    print("Employee Management System")
-    print("==============================")
-    print("1. Add employee")
-    print("2. Show employees")
-    print("3. Search employee")
-    print("4. Update employee")
-    print("5. Remove employee")
-    print("6. Show employee salary")
-    print("7. Show department payroll")
-    print("8. Save")
-    print("9. Exit")
+    for row in reader:
+        employee_id = int(row[0])
+        employee_name = row[1]
+        gmail = row[2]
+        department = row[3]
+        position = row[4]
+        salary = int(row[5])
 
-    try:
-        choice = int(input("Enter your choice: "))
-    except ValueError:
-        print("Please enter a valid number.")
-        continue
-
-    if choice == 1:
-        name = input("Enter employee name: ")
-        gmail = input("Enter employee email: ")
-        department = input("Enter department: ")
-        position = input("Enter position: ")
-
-        try:
-            salary = float(input("Enter salary: "))
-        except ValueError:
-            print("Salary must be a number.")
-            continue
-
-        employee_manager.add_emp(
-            name,
-            gmail,
-            department,
-            position,
-            salary
+        employee_manager.add_existing_employee(
+            employee_id, employee_name, gmail, department, position, salary
         )
 
-    elif choice == 2:
+choice = ""
+while choice != "9":
+    print("======================")
+    print("Employee Management System")
+    print("======================")
+    print("1. Add Employee")
+    print("2. show Employee")
+    print("3. search Employee")
+    print("4. update Employee")
+    print("5. remove Employee")
+    print("6. Employee salary")
+    print("7. department salary")
+    print("8. save")
+    print("9. Exit")
+    choice = input("Enter your choice: ")
+    if choice == "1":
+        name = input("Enter employee name: ")
+        gmail = input("Enter employee gmail: ")
+        department = input("Enter employee department: ")
+        position = input("Enter employee position: ")
+        salary = int(input("Enter employee salary: "))
+        employee_manager.add_emp(name,gmail,department,position,salary)
+    elif choice == "2":
         employee_manager.show_employees()
-
-    elif choice == 3:
-        employee_manager.search_employee()
-
-    elif choice == 4:
+    elif choice == "3":
+        id = int(input("Enter employee id: "))
+        employee_manager.search_employee(id)
+    elif choice == "4":
         employee_manager.update_employee()
-
-    elif choice == 5:
+    elif choice == "5":
         employee_manager.remove_employee()
-
-    elif choice == 6:
-        payroll_manager.show_salary()
-
-    elif choice == 7:
-        payroll_manager.show_department_payroll()
-
-    elif choice == 8:
+    elif choice == "6":
+        payroll.cal_salary()
+    elif choice == "7":
+        payroll.ap_cal_salary()
+    elif choice == "8":
         employee_manager.save_employee()
-
-    elif choice == 9:
-        print("Exiting program.")
+    elif choice == "9":
+        print("Exit")
         break
 
-    else:
-        print("Invalid choice.")
