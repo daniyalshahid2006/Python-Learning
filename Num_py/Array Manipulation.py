@@ -1,0 +1,28 @@
+# import numpy as np
+# numbers = np.array([1,2,3,4,5,6,7,8])
+# print(numbers.reshape((2,4)))
+# numbers1 = np.array([1, 2, 3, 4, 5, 6, 7, 8, 9])
+# print(numbers1.reshape((3,3)))
+# print(numbers1.shape)
+# print(numbers1.reshape((1,9)))
+# print(numbers1.reshape((9,1)))
+# print(np.concatenate((numbers1,numbers1)))
+import numpy as np
+
+# A = np.array([[1,2,3],[4,5,6],[7,8,9]])
+# B = np.array([[10,11,12],[13,14,15],[16,17,18]])
+# c = np.array([1,2,3,4,5,6,7,8])
+# # print(A)
+# # print(B)
+# # print(np.concatenate(([A,B]),axis = 0))
+# # print(np.concatenate((A,B),axis = 1))
+# # print(np.vstack((A,B)))
+# # print(np.hstack((A,B)))
+# # print(np.split(c,2))
+# # print(np.hsplit(A,3))
+# # print(np.vsplit(B,3))
+# # print(A[A>5])
+# print(A,B[(A&B>4)&(A&B<14)])
+numbers = np.array([3, 8, 12, 5, 20, 7, 15])
+numbers[numbers>10]=0
+print(numbers)
