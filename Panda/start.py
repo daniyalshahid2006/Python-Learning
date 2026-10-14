@@ -30,9 +30,49 @@ print(marks.sort_values(ascending=False))
 
 
 
+
+
+marks = pd.Series(
+    [10, 29, 38],
+    index=["dani", "alo", "patalo"]
+)
+
+print(marks.sort_values())
+
 data = {
-    "name": ["Dani","ali","ahmed","sara"],
-
-
-
+    "Name": ["Ali", "Dani", "Ahmed", "Sara"],
+    "Age": [20, 21, 19, 22],
+    "Marks": [0, 92, 65, 88]
 }
+
+df = pd.DataFrame(data)
+print(df)
+# print(type(df))
+# print(df.head())
+# print(df.tail())
+# print(df.describe())
+# print(df.describe(include="all"))
+# print(df["Name"])
+# print(df.iloc[0])
+print(df[df["Marks"].notnull()])
+print(df[df["Marks"] >= 80])
+print(df[df["Age"] >=21])
+print(df[(df["Age"] <= 22) & (df["Marks"].notnull())])
+df["passed"] = df["Marks"]>= 50
+print(df)
+df["Marks + 5"] = df["Marks"] + 5
+print(df)
+
+import pandas as pd
+
+df = pd.DataFrame({
+    "Name": ["Ali", "Dani", "Ahmed", "Sara"],
+    "Marks": [78, None, 65, 88],
+    "Age": [20, 21, None, 22]
+})
+
+print(df)
+print(df.isnull().sum())
+df["Marks"] = df["Marks"].fillna(df["Marks"].mean())
+print(df)
+print(df.isnull().sum())
